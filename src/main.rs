@@ -14,8 +14,12 @@ fn context() -> HashMap<String, Value> {
     let longstring = read_to_string("./longlongtext.txt").unwrap();
     let mut root_ctx = HashMap::new();
     // let values = (0..3_000_000)
-    let values = (0..7)
-        .map(|i| (Value::from(i), Value::from(format!("counter: {i} - world and some extra text"))).into())
+    let values = (0..2)
+        .map(|i| {
+
+            let inner_list = (0..3).map(|j| Value::String(format!("outer: {j } | counter: {i} - world and some extra text"))).collect::<Vec<Value>>();
+            Value::List(inner_list)
+        })
         .collect::<Vec<Value>>();
     let data = Value::List(values);
     let map = Value::Map(HashMap::from([
@@ -23,36 +27,30 @@ fn context() -> HashMap<String, Value> {
     ]));
 
     root_ctx.insert("data".to_string(), map);
-    root_ctx.insert("counter".into(), 0.into());
-    root_ctx.insert("lark".into(), false.into());
-    root_ctx.insert("other".into(), false.into());
-    root_ctx.insert("longstring".into(), longstring.into());
+    // root_ctx.insert("counter".into(), 0.into());
+    // root_ctx.insert("lark".into(), false.into());
+    // root_ctx.insert("other".into(), false.into());
+    // root_ctx.insert("longstring".into(), longstring.into());
     root_ctx
 }
 
 fn main() {
     let template = "
-    // vstack
-    //     // text 'layout time: {{ time }} | render time: {{ render-time }}'
-    //     hstack
-            viewport [item-offset: 1, offset: 123]
-                text 'this is the top of a viewport'
-                for val in {{ data }}
-                    text '{{ val }}'
-                text 'this is the bottom of a viewport'
-            // vstack
-            //     for val in {{ data }}
-            //         text '{{ val }}'
+        // text 'layout time: {{ time }} | render time: {{ render-time }}'
     ";
 
     let template = "
-        viewport [source: {{ data.list }}, binding: 'bob']
+        viewport [source: {{ data.list }}, binding: 'outer_list']
             text 'this is the top of a viewport'
-            for val in {{ bob }}
-                text 'hello {{ val }}'
+
+            for lists in {{ outer_list }}
+                viewport [source: {{ lists }}, binding: 'list']
+                    for item in {{ list }}
+                        text 'hello {{ item }}'
+                        text 'entire list: {{ item }}'
+
             text 'this is the bottom of a viewport'
     ";
-
 
     let (inst, consts) = compiler::compile(template).unwrap();
 
@@ -76,12 +74,12 @@ fn main() {
 
     loop {
         let mut now = Instant::now();
-        root_ctx.insert("counter".to_string(), counter.into());
+        // root_ctx.insert("counter".to_string(), counter.into());
 
         let mut values = Values::new(&root_ctx);
         let mut genny = Gen::new(&templates, &lookup);
         while let Some(mut widget) = genny.gen(&mut values) {
-            let values = values.into_layout();
+            let values = values.layout();
             widget.layout(constraints, &values, &lookup);
             widgets.push(widget);
         }
@@ -97,12 +95,12 @@ fn main() {
             widget.paint(ctx);
         }
 
-        root_ctx.insert("time".to_string(), format!("{:?}", now.elapsed()).into());
+        // root_ctx.insert("time".to_string(), format!("{:?}", now.elapsed()).into());
 
         // prev = widgets.drain(..).collect();
 
         screen.render(&mut output);
-        root_ctx.insert("render-time".to_string(), format!("{:?}", now.elapsed()).into());
+        // root_ctx.insert("render-time".to_string(), format!("{:?}", now.elapsed()).into());
         widgets.clear();
 
         screen.erase();
