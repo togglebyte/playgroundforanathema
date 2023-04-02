@@ -6,17 +6,18 @@ use std::time::Instant;
 use anathema::compiler;
 use anathema::render::*;
 use anathema::vm::*;
-use anathema::widgets::nodegen::gen2::Gen;
+use anathema::widgets::nodegen::Widgets;
 use anathema::widgets::*;
-use anathema::widgets::{Viewport, Text};
+use anathema::widgets::{Viewport, VStack, Text};
 
 fn context() -> HashMap<String, Value> {
     let longstring = read_to_string("./longlongtext.txt").unwrap();
     let mut root_ctx = HashMap::new();
     // let values = (0..3_000_000)
-    let values = (0..2)
+    let values = (0..3)
         .map(|i| {
 
+            // Value::String(format!("hello {i}"))
             let inner_list = (0..3).map(|j| Value::String(format!("outer: {j } | counter: {i} - world and some extra text"))).collect::<Vec<Value>>();
             Value::List(inner_list)
         })
@@ -52,6 +53,14 @@ fn main() {
             text 'this is the bottom of a viewport'
     ";
 
+    let template = "
+        vstack
+            for items in {{ data.list }}
+               for item in {{ items }}
+                    text [italic: true, fg: red] 'a: {{ item }}'
+                    // text [bold: true, bg: blue, fg: black] 'lol'
+    ";
+
     let (inst, consts) = compiler::compile(template).unwrap();
 
     let vm = VirtualMachine::new(inst, consts);
@@ -70,27 +79,27 @@ fn main() {
 
     let mut root_ctx = context();
 
-    let mut widgets = vec![];
+    let mut frame = vec![];
 
     loop {
         let mut now = Instant::now();
         // root_ctx.insert("counter".to_string(), counter.into());
 
         let mut values = Values::new(&root_ctx);
-        let mut genny = Gen::new(&templates, &lookup);
-        while let Some(mut widget) = genny.gen(&mut values) {
+        let mut widgets = Widgets::new(&templates, &lookup);
+        while let Some(mut widget) = widgets.next(&mut values).transpose().unwrap() {
+
             let values = values.layout();
-            widget.layout(constraints, &values, &lookup);
-            widgets.push(widget);
+            if let Ok(size) = widget.layout(constraints, &values, &lookup) {
+                frame.push(widget);
+            }
         }
 
         // // diff(&mut prev, &mut widgets);
 
-        for widget in &mut widgets {
+        for widget in &mut frame {
             widget.position(Pos::ZERO);
-        }
 
-        for widget in &mut widgets {
             let mut ctx = PaintCtx::new(&mut screen, None);
             widget.paint(ctx);
         }
@@ -101,7 +110,7 @@ fn main() {
 
         screen.render(&mut output);
         // root_ctx.insert("render-time".to_string(), format!("{:?}", now.elapsed()).into());
-        widgets.clear();
+        frame.clear();
 
         screen.erase();
 
