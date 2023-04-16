@@ -5,116 +5,61 @@ use std::time::Instant;
 
 use anathema::compiler;
 use anathema::render::*;
+use anathema::runtime::Runtime;
 use anathema::vm::*;
-use anathema::widgets::nodegen::Widgets;
-use anathema::widgets::*;
-use anathema::widgets::{Viewport, VStack, Text};
+use anathema::widgets::nodegen::{WidgetGen, Widgets};
+use anathema::widgets::view::{DefaultView, View};
+use anathema::widgets::{Border, Text, VStack, Viewport, *};
 
-fn context() -> HashMap<String, Value> {
-    let longstring = read_to_string("./longlongtext.txt").unwrap();
-    let mut root_ctx = HashMap::new();
-    // let values = (0..3_000_000)
-    let values = (0..3)
-        .map(|i| {
+struct TheView {
+    ctx: HashMap<String, Value>,
+    templates: Vec<WidgetTemplate>,
+}
 
-            // Value::String(format!("hello {i}"))
-            let inner_list = (0..3).map(|j| Value::String(format!("outer: {j } | counter: {i} - world and some extra text"))).collect::<Vec<Value>>();
-            Value::List(inner_list)
-        })
-        .collect::<Vec<Value>>();
-    let data = Value::List(values);
-    let map = Value::Map(HashMap::from([
-        ("list".to_string(), data)
-    ]));
+impl TheView {
+    pub fn new(templates: Vec<WidgetTemplate>) -> Self {
+        let mut ctx = HashMap::new();
+        let values = (0..2).map(|i| Value::from(i)).collect::<Vec<_>>();
+        ctx.insert("data".into(), Value::List(values));
+        ctx.insert("offset".into(), Value::from(-1i64));
+        ctx.insert("item-offset".into(), Value::from(2i64));
+        Self { templates, ctx }
+    }
+}
 
-    root_ctx.insert("data".to_string(), map);
-    // root_ctx.insert("counter".into(), 0.into());
-    // root_ctx.insert("lark".into(), false.into());
-    // root_ctx.insert("other".into(), false.into());
-    // root_ctx.insert("longstring".into(), longstring.into());
-    root_ctx
+impl View for TheView {
+    fn update(&mut self) {
+        let Value::List(list) = self.ctx.get_mut("data").unwrap() else { panic!() };
+        // list.push("updated".into());
+        // let offset = self.ctx.get("offset").unwrap().to_signed_int().unwrap();
+        // self.ctx.insert("offset".into(), Value::from(offset + 1));
+    }
+
+    fn ctx(&self) -> &HashMap<String, Value> {
+        &self.ctx
+    }
+
+    fn templates(&self) -> &[WidgetTemplate] {
+        &self.templates
+    }
 }
 
 fn main() {
     let template = "
-        // text 'layout time: {{ time }} | render time: {{ render-time }}'
+        viewport [direction: forward, item: {{ item-offset }}, offset: {{ offset }}, source: {{ data }}, binding: x]
+            text 'first'
+            text 'second'
+            item
+                border
+                    text 'number: {{ x }}'
+            text 'end'
     ";
 
-    let template = "
-        viewport [source: {{ data.list }}, binding: 'outer_list']
-            text 'this is the top of a viewport'
+    let templates = templates(template).unwrap();
 
-            for lists in {{ outer_list }}
-                viewport [source: {{ lists }}, binding: 'list']
-                    for item in {{ list }}
-                        text 'hello {{ item }}'
-                        text 'entire list: {{ item }}'
+    let view = TheView::new(templates);
 
-            text 'this is the bottom of a viewport'
-    ";
-
-    let template = "
-        vstack
-            for items in {{ data.list }}
-               for item in {{ items }}
-                    text [italic: true, fg: red] 'a: {{ item }}'
-                    // text [bold: true, bg: blue, fg: black] 'lol'
-    ";
-
-    let (inst, consts) = compiler::compile(template).unwrap();
-
-    let vm = VirtualMachine::new(inst, consts);
-    let templates = vm.exec().unwrap();
-
-    let mut counter = 0;
-
-    let lookup = WidgetLookup::default();
-
-    let mut output = stdout();
-    let (width, height) = size().unwrap();
-    let mut screen = Screen::new(&mut output, (width, height)).unwrap();
-    screen.clear_all(&mut output);
-
-    let constraints = Constraints::new(width as usize, height as usize);
-
-    let mut root_ctx = context();
-
-    let mut frame = vec![];
-
-    loop {
-        let mut now = Instant::now();
-        // root_ctx.insert("counter".to_string(), counter.into());
-
-        let mut values = Values::new(&root_ctx);
-        let mut widgets = Widgets::new(&templates, &lookup);
-        while let Some(mut widget) = widgets.next(&mut values).transpose().unwrap() {
-
-            let values = values.layout();
-            if let Ok(size) = widget.layout(constraints, &values, &lookup) {
-                frame.push(widget);
-            }
-        }
-
-        // // diff(&mut prev, &mut widgets);
-
-        for widget in &mut frame {
-            widget.position(Pos::ZERO);
-
-            let mut ctx = PaintCtx::new(&mut screen, None);
-            widget.paint(ctx);
-        }
-
-        // root_ctx.insert("time".to_string(), format!("{:?}", now.elapsed()).into());
-
-        // prev = widgets.drain(..).collect();
-
-        screen.render(&mut output);
-        // root_ctx.insert("render-time".to_string(), format!("{:?}", now.elapsed()).into());
-        frame.clear();
-
-        screen.erase();
-
-        counter += 1;
-        std::thread::sleep_ms(100);
-    }
+    let mut runtime = Runtime::new().unwrap();
+    runtime.load_view(Box::new(view));
+    runtime.run().unwrap();
 }
