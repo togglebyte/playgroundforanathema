@@ -7,6 +7,7 @@ name = "anathema"
 version = "0.2.0"
 dependencies = [
  "anathema-compiler",
+ "anathema-gen",
  "anathema-render",
  "anathema-runtime",
  "anathema-string",
@@ -21,6 +22,10 @@ dependencies = [
  "anathema-render",
  "anathema-widgets",
 ]
+
+[[package]]
+name = "anathema-gen"
+version = "0.1.0"
 
 [[package]]
 name = "anathema-render"
@@ -62,6 +67,7 @@ dependencies = [
 name = "anathema-widgets"
 version = "0.1.0"
 dependencies = [
+ "anathema-gen",
  "anathema-render",
  "anathema-string",
  "bitflags",
