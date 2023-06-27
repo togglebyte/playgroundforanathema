@@ -9,6 +9,22 @@ use anathema::runtime::Runtime;
 use anathema::vm::*;
 use anathema::widgets::template::Template;
 use anathema::widgets::{Border, HStack, Spacer, VStack, Viewport, *};
+use anathema::widgets::Many;
+
+struct Event {
+    view: &mut View,
+    event: Ev,
+    target: &mut WidgetContainer<'_>
+}
+
+struct View {
+    templates: Vec<Template>,
+    ctx: DataCtx,
+}
+
+trait ViewT {
+    fn event(&self, ctx: &mut DataCtx, event: Event, widgets: &mut Vec<WidgetContainer<'_>>);
+}
 
 fn ctx() -> DataCtx {
     let mut ctx = DataCtx::default();
@@ -21,17 +37,46 @@ fn ctx() -> DataCtx {
 }
 
 fn main() {
-    let template = "
-    vstack
-        hstack
-            for _ in {{ cols }}
-                vstack
-                    for val in {{ data }}
-                        text 'X'
+    let main_template = "
+        zstack
+            vstack
+                border
+                    hstack
+                        border [sides: right, onclick=bob]
+                            text [onclick=bob] 'login '
+                        border [sides: right, onclick=bob]
+                            text ' chat '
+                        text ' settings '
+                        input [keypress=bob, text: 'lol']
+                        spacer
+                expand
+                    border
+                        expand
+                            text 'hello world'
     ";
 
-    let templates = templates(template).unwrap();
+    let rubbish = "
+        position [display: exclude]
+            alignment [align: centre]
+                border [width: 20, height: 5]
+                    text 'well this is something'
+    ";
 
-    let mut runtime = Runtime::new(&templates, ctx()).unwrap();
-    runtime.run().unwrap();
+    let t = templates(main_template).unwrap();
+    let c = ctx();
+    let mut main_view = View { templates: t, ctx: c };
+    // main_view.register_event("bob", |ev: Event, cont: &mut WidgetContainer<'_>, ctx: &mut Ctx| {});
+    main_view.register_event("bob", |ev, widget, ctx| {});
+
+    let t = templates(rubbish).unwrap();
+    let c = ctx();
+    let rubbish_view = View { templates: t, ctx: c };
+
+    // let mut runtime = Runtime::new(&templates, ctx()).unwrap();
+    // runtime.run().unwrap();
 }
+
+
+// Login screen
+// Chat screen
+// Settings screen
