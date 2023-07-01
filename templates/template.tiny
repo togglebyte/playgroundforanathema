@@ -1,0 +1,13 @@
+zstack
+    position [right: 1, top: 1]
+        for x in {{ y }}
+            include "templates/{{ current_view }}"
+
+    vstack
+        border
+            vstack
+                for val in {{ data }}
+                    text ''
+                        for word in {{ words }}
+                            span '{{ word }}'
+
