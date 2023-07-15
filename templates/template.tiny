@@ -1,13 +1,61 @@
 zstack
     position [right: 1, top: 1]
-        for x in {{ y }}
-            include "templates/{{ current_view }}"
+        view "stats"
 
-    vstack
-        border
-            vstack
-                for val in {{ data }}
-                    text ''
-                        for word in {{ words }}
-                            span '{{ word }}'
-
+    hstack
+        vstack
+            border
+                vstack
+                    for val in {{ data }}
+                        text ''
+                            for word in {{ words }}
+                                span '{{ word }}'
+        vstack
+            border
+                vstack
+                    for val in {{ data }}
+                        text ''
+                            for word in {{ words }}
+                                span '{{ word }}'
+        vstack
+            border
+                vstack
+                    for val in {{ data }}
+                        text ''
+                            for word in {{ words }}
+                                span '{{ word }}'
+        vstack
+            border
+                vstack
+                    for val in {{ data }}
+                        text ''
+                            for word in {{ words }}
+                                span '{{ word }}'
+        vstack
+            border
+                vstack
+                    for val in {{ data }}
+                        text ''
+                            for word in {{ words }}
+                                span '{{ word }}'
+        vstack
+            border
+                vstack
+                    for val in {{ data }}
+                        text ''
+                            for word in {{ words }}
+                                span '{{ word }}'
+        vstack
+            border
+                vstack
+                    for val in {{ data }}
+                        text ''
+                            for word in {{ words }}
+                                span '{{ word }}'
+        vstack
+            border
+                vstack
+                    for val in {{ data }}
+                        text ''
+                            for word in {{ words }}
+                                span '{{ word }}'

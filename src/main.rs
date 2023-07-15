@@ -1,23 +1,23 @@
-use std::collections::HashMap;
-use std::fs::read_to_string;
-use std::io::stdout;
-use std::time::Instant;
-
-use anathema::compiler;
-use anathema::render::*;
-use anathema::runtime::events::{Event, DefaultEventProvider, DefaultEvents, KeyCode};
+use anathema::core::contexts::DataCtx;
+use anathema::core::template::Template;
+use anathema::core::views::View;
+use anathema::core::{Value, WidgetContainer};
+use anathema::runtime::events::{
+    DefaultEventProvider, DefaultEvents, Event, KeyCode, KeyModifiers,
+};
 use anathema::runtime::Runtime;
 use anathema::vm::*;
-use anathema::widgets::template::Template;
-use anathema::widgets::{Border, HStack, Many, Spacer, VStack, Viewport, *};
+use anathema::widgets::{Border, register_default_widgets};
 
-struct View {
+#[derive(Debug)]
+struct StatsView {
     templates: Vec<Template>,
-    ctx: DataCtx,
 }
 
-trait ViewT {
-    fn event(&self, ctx: &mut DataCtx, widgets: &mut Vec<WidgetContainer<'_>>);
+impl View for StatsView {
+    fn templates(&self) -> &[Template] {
+        &self.templates
+    }
 }
 
 fn ctx() -> DataCtx {
@@ -29,37 +29,23 @@ fn ctx() -> DataCtx {
     let values = (0..40_000).map(|i| Value::from(i)).collect::<Vec<_>>();
     ctx.insert("cols".to_string(), Value::List(values));
 
-    let words = vec![
-        "abra".to_string().into(),
-        "crabdabra".to_string().into(),
-    ];
+    let words = vec!["abra".to_string().into(), "crabdabra".to_string().into()];
     ctx.insert("words".to_string(), Value::List(words));
-
 
     ctx
 }
 
 fn main() {
-    let main_templates = std::fs::read_to_string("template.tiny").unwrap();
+    register_default_widgets();
+    let main_templates = std::fs::read_to_string("templates/template.tiny").unwrap();
+    let stats_templates = std::fs::read_to_string("templates/stats.tiny").unwrap();
 
-    let rubbish = "
-        position [display: exclude, top: 3, right: 4]
-            // alignment [align: centre]
-                border [width: 20, height: 5]
-                    text 'well this is something'
-    ";
-
-    let t = templates(&main_templates).unwrap();
-
-    //     let c = ctx();
-    //     let mut main_view = View { templates: t, ctx: c };
-
-    //     let t = templates(rubbish).unwrap();
-    //     let c = ctx();
-    //     let rubbish_view = View { templates: t, ctx: c };
+    let main_templates = templates(&main_templates).unwrap();
+    let stats_templates = templates(&stats_templates).unwrap();
+    let stats_view = StatsView { templates: stats_templates };
 
     let mut runtime = Runtime::new(
-        &t,
+        main_templates,
         ctx(),
         DefaultEvents(|ev, ctx, _| {
             match ctx.get_mut::<i64>("counter") {
@@ -67,15 +53,16 @@ fn main() {
                 None => ctx.insert("counter", 1),
             }
 
-            if let Event::KeyPress(KeyCode::Esc, ..) = ev {
+            if let Event::KeyPress(KeyCode::Char('c'), KeyModifiers::CONTROL, ..) = ev {
                 return Event::Quit;
             }
 
             ev
         }),
-        DefaultEventProvider::with_timeout(16),
+        DefaultEventProvider::with_timeout(200),
     )
     .unwrap();
+    runtime.register_view("stats", stats_view);
     runtime.enable_meta = true;
     runtime.run().unwrap();
 }

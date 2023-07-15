@@ -10,6 +10,7 @@ dependencies = [
  "anathema-render",
  "anathema-runtime",
  "anathema-vm",
+ "anathema-widget-core",
  "anathema-widgets",
 ]
 
@@ -18,7 +19,7 @@ name = "anathema-compiler"
 version = "0.1.0"
 dependencies = [
  "anathema-render",
- "anathema-widgets",
+ "anathema-widget-core",
 ]
 
 [[package]]
@@ -35,7 +36,7 @@ name = "anathema-runtime"
 version = "0.1.0"
 dependencies = [
  "anathema-render",
- "anathema-widgets",
+ "anathema-widget-core",
  "crossterm",
  "flume",
 ]
@@ -46,9 +47,20 @@ version = "0.1.0"
 dependencies = [
  "anathema-compiler",
  "anathema-render",
- "anathema-widgets",
+ "anathema-widget-core",
  "crossterm",
  "thiserror",
+]
+
+[[package]]
+name = "anathema-widget-core"
+version = "0.1.0"
+dependencies = [
+ "anathema-render",
+ "bitflags",
+ "parking_lot",
+ "thiserror",
+ "unicode-width",
 ]
 
 [[package]]
@@ -56,8 +68,8 @@ name = "anathema-widgets"
 version = "0.1.0"
 dependencies = [
  "anathema-render",
+ "anathema-widget-core",
  "bitflags",
- "thiserror",
  "unicode-width",
 ]
 
