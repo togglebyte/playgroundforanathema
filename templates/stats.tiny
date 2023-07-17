@@ -17,6 +17,6 @@ vstack
                 text '{{ _meta.timings.render }}'
                 text '{{ _meta.timings.total }}'
 
-    border [sides: top, width: 32]
-        text "visible tree size: "
-            span "{{ _meta.count }}"
+    border [width: 32, background: white, foreground: black]
+        text [foreground: black] "visible tree size: "
+            span [foreground: black] "{{ _meta.count }}"
