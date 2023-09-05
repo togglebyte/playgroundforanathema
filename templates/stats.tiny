@@ -1,4 +1,5 @@
 vstack
+    text "x {{ x }}"
     hstack [background: red]
         border [border-style: thick, width: 16, sides: top|left|bottom]
             vstack
