@@ -19,17 +19,9 @@ dependencies = [
 name = "anathema-compiler"
 version = "0.1.0"
 dependencies = [
- "anathema-generator",
  "anathema-render",
  "anathema-values",
  "anathema-widget-core",
-]
-
-[[package]]
-name = "anathema-generator"
-version = "0.1.0"
-dependencies = [
- "anathema-values",
 ]
 
 [[package]]
@@ -45,7 +37,6 @@ dependencies = [
 name = "anathema-runtime"
 version = "0.1.0"
 dependencies = [
- "anathema-generator",
  "anathema-render",
  "anathema-values",
  "anathema-vm",
@@ -59,6 +50,7 @@ dependencies = [
 name = "anathema-values"
 version = "0.1.0"
 dependencies = [
+ "anathema-render",
  "flume",
  "integer-hasher",
  "parking_lot",

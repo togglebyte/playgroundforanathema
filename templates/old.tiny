@@ -1,0 +1,92 @@
+vstack
+    for x in [1, 2, 3]
+        text x
+
+//     text "head"
+//     if (true && also_true) || not_false
+//         text "true is true"
+//     else
+//         text "false is true"
+
+//     if (true && also_true) || not_false
+//         text "true is true"
+//     else
+//         text "false is true"
+
+//     if (true && also_true) || not_false
+//         text "true is true"
+//     else
+//         text "false is true"
+
+//     if (true && also_true) || not_false
+//         text "true is true"
+//     else
+//         text "false is true"
+//     text "tail"
+
+// // hstack
+// //     text "why: {{ counter }} | "
+//     vstack
+//         text "--- start ---"
+//         for c in {{ data }}
+//             text "hello {{ c }}"
+//             text "lol {{ c }}"
+//         text "--- end [{{ c }}] ---"
+
+// // hstack
+// //     vstack
+// //         border [background: black, foreground: red, border-style: thick]
+// //             text [dim: true, foreground: blue, bold: true, italic: true, inverse: false] "hello, {{ name }} | {{ counter }}"
+// //                 span [bold: true, foreground: magenta] "lol"
+// //         border [background: black, foreground: red, border-style: thick]
+// //             text [dim: true, foreground: blue, bold: true, italic: true, inverse: false] "hello, {{ name }} | {{ counter }}"
+
+// //     vstack
+// //         border [background: black, foreground: red, border-style: thick]
+// //             text [dim: true, foreground: blue, bold: true, italic: true, inverse: false] "hello, {{ name }} | {{ counter }}"
+// //         border [background: black, foreground: red, border-style: thick]
+// //             text [dim: true, foreground: blue, bold: true, italic: true, inverse: false] "hello, {{ name }} | {{ counter }}"
+
+// //     vstack
+// //         border [background: black, foreground: red, border-style: thick]
+// //             text [dim: true, foreground: blue, bold: true, italic: true, inverse: false] "hello, {{ name }} | {{ counter }}"
+// //         border [background: black, foreground: red, border-style: thick]
+// //             text [dim: true, foreground: blue, bold: true, italic: true, inverse: false] "hello, {{ name }} | {{ counter }}"
+
+// // zstack
+// //     hstack
+// //         for _ in {{ cols }}
+// //             vstack
+// //                 border
+// //                     vstack
+// //                         for val in {{ data }}
+// //                             // text ' '
+// //                             //     span 'abracrabdabra'
+// //                             text '{{ val }} - '
+// //                                 for word in {{ words }}
+// //                                     span '{{ word }}'
+
+// //     position [top: 1, right: 2]
+// //         vstack
+// //             text "x {{ x }}"
+// //             hstack [background: red]
+// //                 border [border-style: thick, width: 16, sides: top|left|bottom]
+// //                     vstack
+// //                         border [foreground: black, sides: bottom]
+// //                             text 'layout'
+// //                         text 'paint'
+// //                         text 'position'
+// //                         text 'render'
+// //                         text 'total'
+// //                 border [border-style: thick, width: 16, sides: top|right|bottom]
+// //                     vstack
+// //                         border [foreground: black, sides: bottom]
+// //                             text '{{ _meta.timings.layout }}'
+// //                         text '{{ _meta.timings.paint }}'
+// //                         text '{{ _meta.timings.position }}'
+// //                         text '{{ _meta.timings.render }}'
+// //                         text '{{ _meta.timings.total }}'
+
+// //             border [width: 32, background: white, foreground: black]
+// //                 text [foreground: black] "visible tree size: "
+// //                     span [foreground: black] "{{ _meta.count }}"

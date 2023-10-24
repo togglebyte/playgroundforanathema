@@ -1,63 +1,6 @@
-// hstack
-//     text "why: {{ counter }} | "
-    vstack
-        for x in {{ data }}
-            text "data {{ x }}, hello "
-
-// hstack
-//     vstack
-//         border [background: black, foreground: red, border-style: thick]
-//             text [dim: true, foreground: blue, bold: true, italic: true, inverse: false] "hello, {{ name }} | {{ counter }}"
-//                 span [bold: true, foreground: magenta] "lol"
-//         border [background: black, foreground: red, border-style: thick]
-//             text [dim: true, foreground: blue, bold: true, italic: true, inverse: false] "hello, {{ name }} | {{ counter }}"
-
-//     vstack
-//         border [background: black, foreground: red, border-style: thick]
-//             text [dim: true, foreground: blue, bold: true, italic: true, inverse: false] "hello, {{ name }} | {{ counter }}"
-//         border [background: black, foreground: red, border-style: thick]
-//             text [dim: true, foreground: blue, bold: true, italic: true, inverse: false] "hello, {{ name }} | {{ counter }}"
-
-//     vstack
-//         border [background: black, foreground: red, border-style: thick]
-//             text [dim: true, foreground: blue, bold: true, italic: true, inverse: false] "hello, {{ name }} | {{ counter }}"
-//         border [background: black, foreground: red, border-style: thick]
-//             text [dim: true, foreground: blue, bold: true, italic: true, inverse: false] "hello, {{ name }} | {{ counter }}"
-
-// zstack
-//     hstack
-//         for _ in {{ cols }}
-//             vstack
-//                 border
-//                     vstack
-//                         for val in {{ data }}
-//                             // text ' '
-//                             //     span 'abracrabdabra'
-//                             text '{{ val }} - '
-//                                 for word in {{ words }}
-//                                     span '{{ word }}'
-
-//     position [top: 1, right: 2]
-//         vstack
-//             text "x {{ x }}"
-//             hstack [background: red]
-//                 border [border-style: thick, width: 16, sides: top|left|bottom]
-//                     vstack
-//                         border [foreground: black, sides: bottom]
-//                             text 'layout'
-//                         text 'paint'
-//                         text 'position'
-//                         text 'render'
-//                         text 'total'
-//                 border [border-style: thick, width: 16, sides: top|right|bottom]
-//                     vstack
-//                         border [foreground: black, sides: bottom]
-//                             text '{{ _meta.timings.layout }}'
-//                         text '{{ _meta.timings.paint }}'
-//                         text '{{ _meta.timings.position }}'
-//                         text '{{ _meta.timings.render }}'
-//                         text '{{ _meta.timings.total }}'
-
-//             border [width: 32, background: white, foreground: black]
-//                 text [foreground: black] "visible tree size: "
-//                     span [foreground: black] "{{ _meta.count }}"
+vstack
+    for x in [name, 1, 2, 4, 3]
+        if x % 2 == 0
+            text [italic: true] "even " x ", look, maths! " 1 + 2 * 3
+        else
+            text [foreground: red] "odd " x
