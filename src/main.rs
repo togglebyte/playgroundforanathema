@@ -21,7 +21,7 @@ impl MyState {
         Self {
             name: StateValue::new("Fiddlestick".to_string()),
             counter: StateValue::new(0),
-            data: List::new((0..5)),
+            data: List::new(0..5),
         }
     }
 }
@@ -46,11 +46,22 @@ impl State for MyState {
                     return None;
                 };
                 if key == "data" {
-                    panic!()
-                    // self.data.lookup(right, node_id)
+                    self.data.lookup(right, node_id).map(Into::into)
                 } else {
                     None
                 }
+            }
+            _ => None,
+        }
+    }
+
+    fn get_collection(&self, key: &Path, node_id: Option<&NodeId>) -> Option<usize> {
+        match key {
+            Path::Key(s) if s == "data" => {
+                if let Some(node_id) = node_id.cloned() {
+                    self.data.subscribe(node_id);
+                }
+                Some(self.data.len())
             }
             _ => None,
         }
@@ -91,6 +102,7 @@ fn main() {
         MyState::new(),
         DefaultEvents::<_, MyState>(
             |ev, nodes, state| {
+                *state.counter += 1;
                 // *state.counter = *meta.count;
 
                 if let Event::KeyPress(KeyCode::Char(' '), ..) = ev {

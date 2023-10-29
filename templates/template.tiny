@@ -1,6 +1,11 @@
 vstack
-    for x in [name, 1, 2, 4, 3]
-        if x % 2 == 0
-            text [italic: true] "even " x ", look, maths! " 1 + 2 * 3
-        else
-            text [foreground: red] "odd " x
+    for d in data
+        text d " start"
+        text d
+        text d " end"
+
+    // for x in [name, 1, 2, 4, 3]
+    //     if x % 2 == 0
+    //         text [italic: true] "even " x ", look, maths! " 1 + 2 * 3
+    //     else
+    //         text [foreground: red] "odd " x
