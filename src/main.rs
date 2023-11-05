@@ -8,20 +8,25 @@ use anathema::runtime::events::{
 use anathema::runtime::Runtime;
 use anathema::values::{Collection, List, NodeId, Path, State, StateValue, ValueRef};
 use anathema::vm::*;
-use anathema::widgets::{Text, VStack};
+use anathema::widgets::{Alignment, Border, Text, VStack};
 
 struct MyState {
     name: StateValue<String>,
     counter: StateValue<usize>,
     data: List<usize>,
+    nested_data: List<List<usize>>,
 }
 
 impl MyState {
     pub fn new() -> Self {
         Self {
             name: StateValue::new("Fiddlestick".to_string()),
-            counter: StateValue::new(0),
-            data: List::new(0..5),
+            counter: StateValue::new(2),
+            data: List::new(0..2),
+            nested_data: List::new(vec![
+                List::new(0..2),
+                List::new(100..102),
+            ]),
         }
     }
 }
@@ -51,6 +56,16 @@ impl State for MyState {
                     None
                 }
             }
+            // Path::Composite(left, right) => {
+            //     let Path::Key(key) = left.deref() else {
+            //         return None;
+            //     };
+            //     if key == "nested_data" {
+            //         self.nested_data.lookup(right, node_id).map(Into::into)
+            //     } else {
+            //         None
+            //     }
+            // }
             _ => None,
         }
     }
@@ -62,6 +77,26 @@ impl State for MyState {
                     self.data.subscribe(node_id);
                 }
                 Some(self.data.len())
+            }
+            Path::Key(s) if s == "nested_data" => {
+                if let Some(node_id) = node_id.cloned() {
+                    self.nested_data.subscribe(node_id);
+                }
+                Some(self.nested_data.len())
+            }
+            Path::Composite(lhs, rhs) {
+
+                Rethink how collections (and maps) are dealing with lookups.
+                They should be able to handle nested lookups:
+                e.g List<List<?>> / List<Map<?, List<??>>> / Map<?, Map<?, ??>>
+
+
+
+                if s == "nested_data" => {
+                if let Some(node_id) = node_id.cloned() {
+                    self.nested_data.subscribe(node_id);
+                }
+                Some(self.nested_data.len())
             }
             _ => None,
         }
@@ -102,7 +137,13 @@ fn main() {
         MyState::new(),
         DefaultEvents::<_, MyState>(
             |ev, nodes, state| {
-                *state.counter += 1;
+                if let Event::KeyPress(KeyCode::Char('c'), ..) = ev {
+                    *state.counter += 1;
+                }
+
+                if let Event::KeyPress(KeyCode::Char('d'), ..) = ev {
+                    state.data.remove(*state.counter);
+                }
                 // *state.counter = *meta.count;
 
                 if let Event::KeyPress(KeyCode::Char(' '), ..) = ev {
@@ -112,6 +153,8 @@ fn main() {
                 if let Event::KeyPress(KeyCode::Char('='), ..) = ev {
                     state.data.push(state.data.len());
                 }
+
+                if let Event::KeyPress(KeyCode::Char('1'), ..) = ev {}
 
                 // let val: &mut usize = state.counter.deref_mut();
                 // state.counter += 1;

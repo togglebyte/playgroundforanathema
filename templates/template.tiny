@@ -1,11 +1,20 @@
+// alignment [align: "bottom-left"]
 vstack
-    for d in data
-        text d " start"
-        text d
-        text d " end"
+    for list in nested_data
+        for item in list
+            text "hello world " item " / " counter
 
-    // for x in [name, 1, 2, 4, 3]
-    //     if x % 2 == 0
-    //         text [italic: true] "even " x ", look, maths! " 1 + 2 * 3
-    //     else
-    //         text [foreground: red] "odd " x
+// vstack
+//     for d in data
+//         text d " start"
+//         text d " odd" counter
+//         text d " end"
+
+//     for x in [2, name, 1, 2, 4, 3]
+//         text [italic: true] "even " x ", look, maths! " 1 + 2 * 3
+//         if x % 2 == 0
+//             text [italic: true] "even " x ", look, maths! " 1 + 2 * 3
+//         else if x == 1
+//             text "lol"
+//         else
+//             text [foreground: red] "odd " x
