@@ -9,6 +9,7 @@ dependencies = [
  "anathema-compiler",
  "anathema-render",
  "anathema-runtime",
+ "anathema-value-derive",
  "anathema-values",
  "anathema-vm",
  "anathema-widget-core",
@@ -47,10 +48,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "anathema-value-derive"
+version = "0.1.0"
+dependencies = [
+ "manyhow",
+ "quote",
+ "syn",
+]
+
+[[package]]
 name = "anathema-values"
 version = "0.1.0"
 dependencies = [
  "anathema-render",
+ "anathema-value-derive",
  "flume",
  "integer-hasher",
  "parking_lot",
@@ -224,6 +235,29 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b06a4cde4c0f271a446782e3eff8de789548ce57dbc8eca9292c27f4a42004b4"
 
 [[package]]
+name = "manyhow"
+version = "0.10.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4efde575f79afb9c637eb4663aa451f0bf227413aa734fbbec077cab5900be85"
+dependencies = [
+ "manyhow-macros",
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "manyhow-macros"
+version = "0.10.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fcee04599474650eb26ae5a5c7837e30e55242267ff1bf0adc760b6fcdc3fa2a"
+dependencies = [
+ "proc-macro-utils",
+ "proc-macro2",
+ "quote",
+]
+
+[[package]]
 name = "mio"
 version = "0.8.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -299,6 +333,17 @@ version = "0.1.0"
 dependencies = [
  "anathema",
  "log",
+]
+
+[[package]]
+name = "proc-macro-utils"
+version = "0.8.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3f59e109e2f795a5070e69578c4dc101068139f74616778025ae1011d4cd41a8"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "smallvec",
 ]
 
 [[package]]

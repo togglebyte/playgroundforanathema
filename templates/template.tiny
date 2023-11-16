@@ -1,15 +1,40 @@
-// alignment [align: "bottom-left"]
-vstack
-    for list in nested_data
-        for item in list
-            text "hello world " item " / " counter
+// vstack
+//     for outer in nested_data
+//         for list in outer
+//             for item in list
+//                 if item % 2 == 0
+//                     border
+//                         text "even stuff here"
+//                 else
+//                     text [foreground: red] "some oddities"
+//                 text "hello world " item " / " counter
+
+// vstack
+//     for lists in nested_data
+//         for outer in lists
+//             for inner in outer
+//                 text inner
 
 // vstack
 //     for d in data
-//         text d " start"
-//         text d " odd" counter
-//         text d " end"
+//         text d
 
+
+vstack
+    for list in thing.entry
+        text "list"
+
+        // for map in list
+        //     text map.lol
+
+// vstack
+//     for lark in things
+//         text lark.aaa lark.bbb
+
+// text mappy.bbb
+
+// vstack
+//     text thing.bbb thing.aaa
 //     for x in [2, name, 1, 2, 4, 3]
 //         text [italic: true] "even " x ", look, maths! " 1 + 2 * 3
 //         if x % 2 == 0
