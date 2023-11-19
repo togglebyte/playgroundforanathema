@@ -10,19 +10,21 @@
 //                 text "hello world " item " / " counter
 
 // vstack
-//     for lists in nested_data
-//         for outer in lists
-//             for inner in outer
-//                 text inner
-
-// vstack
-//     for d in data
-//         text d
-
+//     for list in nested_list
+//         for item in list
+//             text item
 
 vstack
-    for list in thing.entry
-        text "list"
+    for d in data
+        text d
+
+
+// for val in idontexistnested_list[counter][0]
+//     text val[0]
+
+// vstack
+//     for list in thing.entry
+//         text "list" // <- this is the broken one!
 
         // for map in list
         //     text map.lol

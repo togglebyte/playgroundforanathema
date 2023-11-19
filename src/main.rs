@@ -16,8 +16,8 @@ struct MyState {
     counter: StateValue<usize>,
     data: List<usize>,
     names: List<String>,
-    nested_data: List<List<List<usize>>>,
-    mappy: Map<Map<usize>>,
+    nested_list: List<List<usize>>,
+    nested_map: Map<Map<usize>>,
     thing: Map<List<Map<&'static str>>>,
     // things: List<Map<usize>>
 }
@@ -33,11 +33,11 @@ impl MyState {
 
         Self {
             name: StateValue::new("Fiddlesticks".to_string()),
-            counter: StateValue::new(2),
+            counter: StateValue::new(0),
             data: List::new(0..4),
             names: List::new(vec!["flip".to_string(), "flop".into()]),
-            nested_data: List::new(vec![List::new(vec![List::new(0..4), List::new(100..102)])]),
-            mappy: Map::new(map),
+            nested_list: List::new(vec![List::new(0..4), List::new(100..102)]),
+            nested_map: Map::new(map),
             thing: Map::new(map_2),
             // things: List::new(vec![
             //     Map::new(map),
@@ -48,7 +48,11 @@ impl MyState {
 }
 
 fn main() {
-    // tinylog::init_logger(true).unwrap();
+    // // tinylog::init_logger(true).unwrap();
+
+    // let list = List::new(vec!["lol".to_string()]);
+    // let lol = list.get(&Path::Index(0), None);
+    // eprintln!("{lol:?}");
 
     let main_templates = std::fs::read_to_string("templates/template.tiny").unwrap();
 
@@ -76,7 +80,7 @@ fn main() {
                 }
 
                 if let Event::KeyPress(KeyCode::Char('='), ..) = ev {
-                    // state.data.push(state.data.len());
+                    state.data.push(state.data.len());
                 }
 
                 if let Event::KeyPress(KeyCode::Char('1'), ..) = ev {}
