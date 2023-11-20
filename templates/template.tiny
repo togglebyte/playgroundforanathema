@@ -1,39 +1,43 @@
-// vstack
-//     for outer in nested_data
-//         for list in outer
-//             for item in list
-//                 if item % 2 == 0
-//                     border
-//                         text "even stuff here"
-//                 else
-//                     text [foreground: red] "some oddities"
-//                 text "hello world " item " / " counter
-
-// vstack
-//     for list in nested_list
-//         for item in list
-//             text item
 
 vstack
-    for d in data
-        text d
+    border [border-style: "thick"]
+        text "username: "
+            span [foreground: blue, bold: true, italic: true] "kenneth123"
 
 
-// for val in idontexistnested_list[counter][0]
-//     text val[0]
+    border
+        vstack
+            text "--- this works: data loop ----"
+            vstack
+                for d in data
+                    text d
+            text "--- EO data loop ---"
 
-// vstack
-//     for list in thing.entry
-//         text "list" // <- this is the broken one!
 
-        // for map in list
-        //     text map.lol
+    border
+        vstack
+            for lists in [[[1], [2, counter]]]
+                for list in lists
+                    for item in list
+                        text item
 
-// vstack
-//     for lark in things
-//         text lark.aaa lark.bbb
+    border
+        vstack
+            for list in thing.entry
+                if list.lol
+                    text list.lol
+                else
+                    text list.flap
 
-// text mappy.bbb
+
+    border [foreground: red]
+        vstack
+            text "--- this works: nested list ---"
+            vstack
+                for list in nested_list
+                    for item in list
+                        text item
+            text "--- EO nested list ---"
 
 // vstack
 //     text thing.bbb thing.aaa

@@ -18,7 +18,7 @@ struct MyState {
     names: List<String>,
     nested_list: List<List<usize>>,
     nested_map: Map<Map<usize>>,
-    thing: Map<List<Map<&'static str>>>,
+    thing: Map<List<Map<String>>>,
     // things: List<Map<usize>>
 }
 
@@ -27,7 +27,9 @@ impl MyState {
         let map = [("aaa", 1), ("bbb", 4)];
         let map = [("aaa", Map::new(map))];
         let map_2 = [("entry", List::new(vec![
-                Map::new([("lol", "omg I can't believe it I've never been this far away from")]),
+                Map::new([("flap", "fiddle sticks".to_string())]),
+                Map::new([("lol", "omg I can't believe it I've never been this far away from".to_string())]),
+                Map::new([("flap", "fiddle sticks".to_string())]),
         ]))];
         // let map_3 = [
 
