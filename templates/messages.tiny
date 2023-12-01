@@ -1,0 +1,8 @@
+vstack
+    for msg in messages
+        component "message" msg
+
+
+        state: Box<dyn State>
+
+        state: state.downcast::<Self::State>();

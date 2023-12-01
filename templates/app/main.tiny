@@ -1,0 +1,3 @@
+vstack
+    text "this is the main view"
+    view "items"

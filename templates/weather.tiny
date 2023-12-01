@@ -1,0 +1,47 @@
+
+text [display: show_input] "hello world"
+
+for x in [1]
+    text ""
+
+if x 
+    text "ů"
+
+vstack
+    expand
+        border
+            component "messages" 
+
+    component "input" 
+
+// zstack
+//     alignment [align: "center"]
+//         zstack
+//             text [bold: true] """
+//           .-~~~-.
+//   .- ~ ~-(       )_ _
+//  /                     ~ -.
+// |                           \
+//  \                         .'
+//    ~- . _____________ . -~
+// """
+
+//             position [top: 4, left: 6]
+//                 text [foreground: magenta, italic: true] weather
+
+//     // // Search popup
+//     // alignment [align: "center", display: show_input]
+//     //     border
+//     //         text "enter locality: "
+//     //             span locality
+
+
+
+
+//         border
+//             if system_message
+//                 text [foreground: red] text
+//             else
+//                 text [foreground: message.colour] sender
+//                     span " > "
+                    // span [bold: true] text
