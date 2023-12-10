@@ -1,4 +1,0 @@
-vstack
-    text sender
-        span [foreground: red] " > "
-        span text

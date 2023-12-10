@@ -1,0 +1,4 @@
+expand
+    vstack
+        for message in messages
+            view message message

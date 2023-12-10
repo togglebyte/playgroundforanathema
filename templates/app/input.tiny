@@ -1,0 +1,7 @@
+border
+    hstack
+        text [foreground: red] input
+        if input
+            text [foreground: blue] " <- you wrote this"
+        else
+            text [foreground: blue, italic: true] "[input]"

@@ -1,4 +1,0 @@
-vstack
-    text "items goes here..."
-    for item in items
-        view "item" item

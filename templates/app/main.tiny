@@ -1,3 +1,5 @@
 vstack
-    text "this is the main view"
-    view items
+    view input
+    text "this is our amazing application"
+    border
+        view messages

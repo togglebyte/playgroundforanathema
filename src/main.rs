@@ -1,79 +1,147 @@
 use std::borrow::Cow;
 use std::ops::{Deref, DerefMut};
 
-use anathema::core::views::View;
-use anathema::core::{Nodes, Display, Axis, Align};
-use anathema::runtime::events::{
-    DefaultEventProvider, DefaultEvents, Event, KeyCode, KeyModifiers,
-};
+use anathema::core::views::{TabIndex, View};
+use anathema::core::{Align, Axis, Display, Event, KeyCode, KeyModifiers, Nodes};
 use anathema::runtime::Runtime;
-use anathema::values::{Collection, List, NodeId, Path, State, StateValue, ValueRef, Map};
+use anathema::values::{Collection, List, Map, NodeId, Path, State, StateValue, ValueRef};
 use anathema::vm::*;
-// use anathema::widgets::{Alignment, Border, Text, VStack, ZStack, Position};
-use anathema::widgets::{Text};
+use anathema::widgets::{Alignment, Border, Position, Text, VStack, ZStack};
 
-struct Items;
+// -----------------------------------------------------------------------------
+//   - Message -
+// -----------------------------------------------------------------------------
+#[derive(Debug)]
+struct MessageView;
 
-impl View for Items {
-    type State = ();
-
-    fn event(&self, event: (), state: &mut Self::State) {
-        todo!()
-    }
+impl View for MessageView {
+    type State = Message;
 
     fn make() -> Self {
         Self
     }
 }
 
+#[derive(Debug, State)]
+struct Message {
+    sender: StateValue<String>,
+    text: StateValue<String>,
+    count: StateValue<usize>,
+}
+
+// -----------------------------------------------------------------------------
+//   - Messages -
+// -----------------------------------------------------------------------------
+#[derive(Debug)]
+struct MessagesView {
+    messages: Messages,
+}
+
+impl View for MessagesView {
+    type State = Messages;
+
+    fn make() -> Self {
+        Self {
+            messages: Self::State::new(),
+        }
+    }
+
+    fn on_event(&mut self, event: Event, nodes: &mut Nodes<'_>) {
+        match event {
+            Event::KeyPress(KeyCode::Char('b'), ..) => {
+                // nodes.query().by_attrib("hi", 3).for_each(|node| {});
+            }
+            Event::KeyPress(KeyCode::Char('x'), ..) => {
+                self.messages.messages.pop();
+            }
+            Event::KeyPress(KeyCode::Char('a'), ..) => {
+                let next = self.messages.messages.len();
+                self.messages.messages.push(Message {
+                    sender: StateValue::new(format!("Floppy")),
+                    text: StateValue::new("This is the text".into()),
+                    count: StateValue::new(next),
+                });
+            }
+            _ => {}
+        }
+    }
+
+    fn get_state(&self) -> &dyn State {
+        &self.messages
+    }
+}
+
+#[derive(Debug, State)]
+struct Messages {
+    messages: List<Message>,
+}
+
+impl Messages {
+    pub fn new() -> Self {
+        Self {
+            messages: List::new(vec![Message {
+                sender: StateValue::new(format!("ToggleBoggleBlorp")),
+                text: StateValue::new("you are all wonderful".into()),
+                count: StateValue::new(0),
+            }]),
+        }
+    }
+}
+
+#[derive(Debug)]
+struct InputView(InputState);
+
+impl View for InputView {
+    type State = StateValue<String>;
+
+    fn make() -> Self {
+        Self(InputState {
+            input: StateValue::new(String::new()),
+        })
+    }
+
+    fn on_event(&mut self, event: Event, nodes: &mut Nodes<'_>) {
+        match event {
+            Event::KeyPress(keycode, ..) => {
+                match keycode {
+                    KeyCode::Char(c) => self.0.input.push(c),
+                    KeyCode::Backspace => drop(self.0.input.pop()),
+                    KeyCode::Enter => {
+                        let msg = self.0.input.drain(..).collect::<String>();
+                        self.0.input.clear()
+                    }
+                    _ => {}
+                }
+            }
+            _ => {}
+        }
+    }
+
+    fn get_state(&self) -> &dyn State {
+        &self.0
+    }
+}
+
+#[derive(Debug, State)]
+struct InputState {
+    input: StateValue<String>,
+}
+
 fn main() {
     let main_templates = std::fs::read_to_string("templates/app/main.tiny").unwrap();
+    let input_templates = std::fs::read_to_string("templates/app/input.tiny").unwrap();
+    let messages_templates = std::fs::read_to_string("templates/app/messages.tiny").unwrap();
+    let message_templates = std::fs::read_to_string("templates/app/message.tiny").unwrap();
 
-    Views has to be compiled first, so they exists in some kind of larger structure.
-    * Share consts maybe? (get rid of owned strings for views)
-    * What about hot reloading templates? Maybe a "large" reload function that
-      reloads everything?
-    * Let's add a `Template` struct that handles all the templates (can include hot-reloading too)
+    let mut templates = Templates::new(main_templates);
+    templates.add_view("input".into(), input_templates, InputView::make);
+    templates.add_view("messages".into(), messages_templates, MessagesView::make);
+    templates.add_view("message".into(), message_templates, || MessageView);
+    templates.compile().unwrap();
 
+    let mut runtime = Runtime::new(&templates.expressions()).unwrap();
 
-    // let main_templates = std::fs::read_to_string("templates/template.tiny").unwrap();
-
-    let main_expr = templates(&main_templates).unwrap();
-
-    let mut runtime = Runtime::new(
-        &main_expr,
-        (),
-        DefaultEvents::<_, ()>(
-            |ev, nodes, state| {
-                if let Event::KeyPress(KeyCode::Char(c), ..) = ev {
-                    if c == 'x' {
-                        // nodes.by_attribute("name", "boopy", state);
-                        // nodes.by_attribute("name", "boopy").for_each(|n| {
-                        // });
-                    }
-                }
-
-                if let Event::CtrlC = ev {
-                    return Event::Quit;
-                }
-
-                ev
-            },
-            Default::default(),
-        ),
-        DefaultEventProvider::with_timeout(100),
-    )
-    .unwrap();
-
-    runtime.register_view("items", || Items);
-
-    // runtime.register_view(
-    //     "stats",
-    //     StatsView {
-    //         templates: stats_templates,
-    //     },
-    // );
     runtime.enable_meta = true;
     // runtime.enable_mouse = true;
-    runtime.run().unwrap();
+    runtime.run().expect("this is weird");
 }
