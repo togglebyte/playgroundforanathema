@@ -1,4 +1,4 @@
-text [foreground: blue, hi: count] "sender: " sender ": "
-    span [foreground: red] text
+text [hi: count] "sender: " sender ": "
+    span [] text
     if count == 3
-        span [foreground: magenta] "sparkles!"
+        span [] " sparkles!"

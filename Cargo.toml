@@ -10,6 +10,7 @@ debug = true
 
 [dependencies]
 anathema = { path = "../anathema" }
+flume = "0.11.0"
 # anathema = { path = "../../../temp/blob" }
 log = "0.4.19"
 # tinylog = { path = "../tinylog" }

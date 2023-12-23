@@ -1,106 +1,14 @@
-vstack
-    border
-        hstack
-            border [width: 13]
-                text "input"
-                    span [foreground: blue] "boop"
-            border
-                text [bold: true] "you types: "
-                    span "input"
-                    span " and it's delightful"
+for i in [numbers[0].ext]
+    text i
 
-    border
-        vstack
-            border [width: 13, name: "boopy"]
-                text "input"
-                    span [foreground: blue] "boop"
-            border
-                text [bold: true] "you types: "
-                    span "input"
-                    span " and it's delightful"
+    // text [] [numbers[7]][i + -1 - 9].ext
+// text numbers[10].ext
 
-    border
-        hstack
-            border [width: 13]
-                text "input"
-                    span [foreground: blue] "boop"
-            border
-                text [bold: true] "you types: "
-                    span [name: "boopy"] "input"
-                    span " and it's delightful"
+
+// for i in [[3]]
+//     text [] i[0]
 
 // vstack
-//     selectable_list
-//         // list of things
-//         for message in messages
-//             if message.type == "unselectable"
-//                 border [foreground: red]
-//                     text message.text
-//             else
-//                 hstack
-//                     text "x"
-//                     text message.text
-
-//     // input field
-//     border
-//         hstack
-//             text ">"
-//             input username
-
-
-
-
-    // text "looks like your current name is " name
-
-//     progress [min: 0, max: 100, current: counter]
-
-
-//     border [border-style: "thick"]
-//         text "username: "
-//             span [foreground: blue, bold: true, italic: true] "kenneth123"
-
-
-//     border
-//         vstack
-//             text "--- this works: data loop ----"
-//             vstack
-//                 for d in data
-//                     text d
-//             text "--- EO data loop ---"
-
-
-//     border
-//         vstack
-//             for lists in [[[1], [2, counter]]]
-//                 for list in lists
-//                     for item in list
-//                         text item
-
-//     border
-//         vstack
-//             for list in thing.entry
-//                 if list.lol
-//                     text list.lol
-//                 else
-//                     text list.flap
-
-
-//     border [foreground: red]
-//         vstack
-//             text "--- this works: nested list ---"
-//             vstack
-//                 for list in nested_list
-//                     for item in list
-//                         text item
-//             text "--- EO nested list ---"
-
-// // vstack
-// //     text thing.bbb thing.aaa
-// //     for x in [2, name, 1, 2, 4, 3]
-// //         text [italic: true] "even " x ", look, maths! " 1 + 2 * 3
-// //         if x % 2 == 0
-// //             text [italic: true] "even " x ", look, maths! " 1 + 2 * 3
-// //         else if x == 1
-// //             text "lol"
-// //         else
-// //             text [foreground: red] "odd " x
+//     text "it is true is " is_true
+//     for t in [[{"ext": (12 + 3) * 2}]]
+//         @external {"ext": is_true}

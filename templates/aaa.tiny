@@ -1,0 +1,9 @@
+hstack
+    border [foreground: "red"]
+        text text
+    border [width: 5 + 2]
+        text [text-align: "left"] "hello world"
+            span "bunny " text
+
+    border [width: 18 + 2]
+        text [text-align: "right"] "a one xyzxyzxyzxyzxyzxyz"

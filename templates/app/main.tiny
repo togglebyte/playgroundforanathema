@@ -1,5 +1,14 @@
-vstack
-    view input
-    text "this is our amazing application"
-    border
-        view messages
+hstack []
+    // Left pane
+    expand [factor: 1]
+        border
+            expand
+                vstack
+                    for x in [1, 2, 3]
+                        text "Item " x
+
+    // Right pane
+    expand [factor: 4]
+        border
+            expand
+                text "This isn't where I parked my car!"

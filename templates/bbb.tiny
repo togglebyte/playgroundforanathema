@@ -1,0 +1,2 @@
+border [foreground: color]
+    text "input is: " input " "

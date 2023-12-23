@@ -44,7 +44,7 @@ dependencies = [
  "anathema-widget-core",
  "anathema-widgets",
  "crossterm",
- "flume",
+ "flume 0.10.14",
 ]
 
 [[package]]
@@ -63,7 +63,7 @@ version = "0.1.0"
 dependencies = [
  "anathema-render",
  "anathema-value-derive",
- "flume",
+ "flume 0.10.14",
  "integer-hasher",
  "parking_lot",
  "smallvec",
@@ -183,6 +183,18 @@ dependencies = [
  "futures-sink",
  "nanorand",
  "pin-project",
+ "spin",
+]
+
+[[package]]
+name = "flume"
+version = "0.11.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "55ac459de2512911e4b674ce33cf20befaba382d05b62b008afc1c8b57cbf181"
+dependencies = [
+ "futures-core",
+ "futures-sink",
+ "nanorand",
  "spin",
 ]
 
@@ -352,6 +364,7 @@ name = "playgroundforanathema"
 version = "0.1.0"
 dependencies = [
  "anathema",
+ "flume 0.11.0",
  "log",
 ]
 

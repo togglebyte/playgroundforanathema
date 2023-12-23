@@ -1,0 +1,12 @@
+border [width: 5 + 2]
+    text [squash: true] "hello " text
+        span [foreground: "green"] "world"
+
+// hstack [height: 10]
+//     border [width: 7]
+//         text offset
+//     border [height: 10]
+        // viewport [offset: offset, direction: "backward", clamp: true]
+        //     for i in things
+        //         border
+        //             text i

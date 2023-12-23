@@ -1,0 +1,10 @@
+vstack
+    border
+        vstack
+            text [foreground: "magenta"] "layout: " layout
+            text "position: " position
+            text "paint: " paint
+            text "render: " render
+            text "total: " total
+    border
+        text "total widget count: " count

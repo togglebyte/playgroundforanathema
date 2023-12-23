@@ -1,7 +1,7 @@
-border
+border [min-height: 3, min-width: 5] 
     hstack
-        text [foreground: red] input
+        text [foreground: foreground] input
         if input
-            text [foreground: blue] " <- you wrote this"
+            text [] " <- you wrote this"
         else
-            text [foreground: blue, italic: true] "[input]"
+            text [italic: true] "[input]"
