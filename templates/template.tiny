@@ -1,5 +1,8 @@
-for i in [numbers[0].ext]
-    text i
+vstack
+    for n in [{"a": 0}, {"a": 1}, {"a": 2}]
+        for i in [numbers[n.a]]
+            // text numbers[i.ext].ext
+            @external {"ext": 1}
 
     // text [] [numbers[7]][i + -1 - 9].ext
 // text numbers[10].ext

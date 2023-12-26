@@ -2,15 +2,15 @@ use std::any::Any;
 use std::borrow::Cow;
 use std::ops::{Deref, DerefMut};
 
+use anathema::compiler;
 use anathema::core::views::View;
 use anathema::core::{Align, Axis, Display, Event, KeyCode, KeyModifiers, Nodes};
 use anathema::render::Color;
 use anathema::runtime::{Meta, Runtime};
 use anathema::values::{
-    Collection, DynValue, List, Map, NodeId, Path, State, StateValue, ValueRef, ValueExpr
+    Collection, DynValue, List, Map, NodeId, Path, State, StateValue, ValueExpr, ValueRef,
 };
 use anathema::vm::*;
-use anathema::compiler;
 use anathema::widgets::{
     Alignment, Border, HStack, Position, Spacer, Text, VStack, Viewport, ZStack,
 };
@@ -53,6 +53,7 @@ struct AState {
     text: StateValue<String>,
     is_true: StateValue<bool>,
     numbers: List<TinyState>,
+    zeroes: List<usize>,
 }
 
 impl AState {
@@ -62,35 +63,36 @@ impl AState {
             things: List::new(0..25_000),
             text: String::from("hello").into(),
             is_true: true.into(),
-                numbers: List::new((0..11).map(|n| TinyState { ext: n.into() }))
+            numbers: List::new((0..11).map(|n| TinyState { ext: n.into() })),
+            zeroes: List::new(vec![0, 0]),
+        }
+    }
+}
+
+#[derive(Debug, State)]
+struct BState {
+    color: StateValue<Color>,
+    background: StateValue<Color>,
+    counter: StateValue<u32>,
+    input: StateValue<String>,
+}
+
+#[derive(Debug)]
+struct B(BState);
+
+impl View for B {
+    type State = BState;
+
+    fn get_state(&self) -> &dyn State {
+        &self.0
+    }
+
+    fn on_event(&mut self, event: Event, nodes: &mut Nodes<'_>) {
+        if let Event::KeyPress(code, ..) = event {
+            if let (KeyCode::Tab | KeyCode::BackTab) = code {
+                return;
             }
-        }
-    }
-
-    #[derive(Debug, State)]
-    struct BState {
-        color: StateValue<Color>,
-        background: StateValue<Color>,
-        counter: StateValue<u32>,
-        input: StateValue<String>,
-    }
-
-    #[derive(Debug)]
-    struct B(BState);
-
-    impl View for B {
-        type State = BState;
-
-        fn get_state(&self) -> &dyn State {
-            &self.0
-        }
-
-        fn on_event(&mut self, event: Event, nodes: &mut Nodes<'_>) {
-            if let Event::KeyPress(code, ..) = event {
-                if let (KeyCode::Tab | KeyCode::BackTab) = code {
-                    return;
-                }
-                *self.0.counter += 1;
+            *self.0.counter += 1;
 
             match code {
                 KeyCode::Char(c) => self.0.input.push(c),
@@ -155,13 +157,16 @@ fn main() {
             color: Color::Black.into(),
             background: Color::Reset.into(),
             counter: 0.into(),
-            input: String::new().into(), 
+            input: String::new().into(),
         })
     });
 
     templates.add_view("meta", meta, MetaView::default());
     templates.add_prototype("external", ext, || ());
-    templates.compile().unwrap();
+    if let Err(e) = templates.compile() {
+        eprintln!("{e}");
+        panic!()
+    }
 
     let mut runtime = Runtime::new(&templates.expressions()).unwrap();
     runtime.enable_tabindex = false;
